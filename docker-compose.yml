@@ -1,0 +1,49 @@
+version: '3.1'
+services: 
+    app:
+        #build: .
+        image: my-project-dev:latest
+        container_name: "fastapi-dev"
+        ports:
+            - "1234:8886"
+        restart: on-failure  #always
+        volumes: 
+            - ${PWD}:/app
+            #- app:/app
+        depends_on:
+            - mysql
+        networks: 
+            - net
+    
+    redis:
+        image: my-redis-img:latest
+        container_name: "redis-dev"
+        ports: 
+            - "1235:6379"
+        command: redis-server --appendonly yes
+        volumes: 
+            - redis:/data
+        restart: always
+        networks: 
+            - net
+        
+    mysql:
+        image: mysql-img:latest
+        container_name: "mysql-dev"
+        command: --default-authentication-plugin=mysql_native_password
+        ports: 
+            - "1236:3306"
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: mysqlpwd
+        volumes:
+            - db_data:/var/lib/mysql
+        networks: 
+            - net
+
+networks:
+    net:
+volumes:
+    app:
+    redis:
+    db_data:
