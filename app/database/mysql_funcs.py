@@ -13,30 +13,33 @@ def get_connection():
         Return:
             A connection object
     '''
-    if config.mode == "PRD":
-        #-------------------Production environment-------------------#
-        connection = pymysql.connect(host=config.mysql_PRD["host"],
-                                    user=config.mysql_PRD["user"],
-                                    password=config.mysql_PRD["password"],
-                                    port=config.mysql_PRD["port"],
-                                    database=config.mysql["database"],
-                                    cursorclass=pymysql.cursors.DictCursor,)
-    elif config.mode == "QAS":
-        #-------------------QAS environment-------------------#
-        connection = pymysql.connect(host=config.mysql_QAS["host"],
-                                    user=config.mysql_QAS["user"],
-                                    password=config.mysql_QAS["password"],
-                                    port=config.mysql_QAS["port"],
-                                    database=config.mysql["database"],
-                                    cursorclass=pymysql.cursors.DictCursor,)
-    else:   #config.mode == "DEV":
-        #-------------------Developer environment-------------------#
-        connection = pymysql.connect(host=config.mysql_DEV["externalDEV"],
-                                    user=config.mysql_DEV["user"],
-                                    password=config.mysql_DEV["password"],
-                                    port=config.mysql_DEV["port"],
-                                    database=config.mysql["database"],
-                                    cursorclass=pymysql.cursors.DictCursor,)
+    try:
+        if config.mode == "PRD":
+            #-------------------Production environment-------------------#
+            connection = pymysql.connect(host=config.mysql_PRD["host"],
+                                        user=config.mysql_PRD["user"],
+                                        password=config.mysql_PRD["password"],
+                                        port=config.mysql_PRD["port"],
+                                        database=config.mysql["database"],
+                                        cursorclass=pymysql.cursors.DictCursor,)
+        elif config.mode == "QAS":
+            #-------------------QAS environment-------------------#
+            connection = pymysql.connect(host=config.mysql_QAS["host"],
+                                        user=config.mysql_QAS["user"],
+                                        password=config.mysql_QAS["password"],
+                                        port=config.mysql_QAS["port"],
+                                        database=config.mysql["database"],
+                                        cursorclass=pymysql.cursors.DictCursor,)
+        else:   #config.mode == "DEV":
+            #-------------------Developer environment-------------------#
+            connection = pymysql.connect(host=config.mysql_DEV["externalDEV"],
+                                        user=config.mysql_DEV["user"],
+                                        password=config.mysql_DEV["password"],
+                                        port=config.mysql_DEV["port"],
+                                        database=config.mysql["database"],
+                                        cursorclass=pymysql.cursors.DictCursor,)
+    except:
+        raise Exception("Failed to connect to MySQL database")
     try:
         yield connection
     finally:
